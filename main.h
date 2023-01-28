@@ -24,7 +24,7 @@
  * @unsign: flag if unsigned value
  * @plus_flag: on if plus_flag specified
  * @space_flag: on if hashtag_flag specified
- * @hash_flag: on if _flag specified
+ * @hashtag_flag: on if _flag specified
  * @zero_flag: on if _flag specified
  * @minus_flag: on if _flag specified
  * @width: field width specified
@@ -34,12 +34,12 @@
  */
 typedef struct parameters
 {
-	unsigned int unsign      : 1;
-	unsigned int plus_flag  :1;
-	unsigned int space_flag  :1;
-	unsigned int hash_flag  :1;
-	unsigned int zero_flag  :1;
-	unsigned int minus_flag  :1;
+	unsigned int unsign        :1;
+	unsigned int plus_flag     :1;
+	unsigned int space_flag    :1;
+	unsigned int hashtag_flag  :1;
+	unsigned int zero_flag     :1;
+	unsigned int minus_flag    :1;
 
 	unsigned int width;
 	unsigned int precision;
