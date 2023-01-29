@@ -1,41 +1,50 @@
 #include "main.h"
+#include <limits.h>
+#include <stdio.h>
+
 /**
  * _printf - a function that prints
  * @format: specify how the output should be formatted
+ * Description: this function will call the get_print() function that will
+ * determine which printing function to call depending on the conversion
+ * specifiers contained into fmt
  * Return: number of digits
  */
 int _printf(const char *format, ...)
 {
-	va_list list;
-	int cont = 0, i = -1;
-	int (*z)(va_list);
+	int (*pfunc)(va_list, flags_t *);
+	const char *p;
+	va_list arguments;
+	flags_t flags = {0, 0, 0};
 
-	va_start(list, format);
+	register int count = 0;
 
-	if (format != NULL)
+	va_start(arguments, format);
+	if (!format || (format[0] == '%' && !format[1]))
+		return (-1);
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	for (p = format; *p; p++)
 	{
-		i = 0;
-		for (; format[cont] != '\0'; i++, cont++)
+		if (*p == '%')
 		{
-			if (format[cont] != '%')
-				_putchar(format[cont]);
-			else if (format[cont] == '%' && format[cont + 1] == '\0')
+			p++;
+			if (*p == '%')
 			{
-				return (-1);
+				count += _putchar('%');
+				continue;
 			}
-			else if (format[cont] == '%' && format[cont + 1] != '\0')
-			{
-				z = get_function(format[cont + 1]);
-				if (z == NULL)
-					_putchar(format[cont]);
-				else
-				{
-					i = (i + z(list)) - 1;
-					cont++;
-				}
-			}
-		}
+			while (get_flag(*p, &flags))
+				p++;
+			pfunc = get_print(*p);
+			count += (pfunc)
+				? pfunc(arguments, &flags)
+				: _printf("%%%c", *p);
+		} else
+			count += _putchar(*p);
 	}
-	va_end(list);
-	return (i);
+	_putchar(-1);
+	va_end(arguments);
+	return (count);
+
 }
